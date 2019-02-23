@@ -47,15 +47,10 @@ export default class HomeScreen extends React.Component {
         date: new Date()
       }
     ];
-
-    // const total = testData.map(item => item.amount)
-    // const total = testData.map(item => {
-    //   return item.amount;
-    // }); // [1, 2, 5]
-
-    // const totalAmount = total.reduce((accumulator, currentValue) => {
-    //   return accumulator + currentValue;
-    // }, 3);
+    // const total = testData.map(item => item.amount) // [1, 2, 5]
+    // const totalAmount = total.reduce((acc, val) => {
+    //   return acc + val;
+    // });
 
     const totalAmount = testData
       .map(item => item.amount)
