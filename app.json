@@ -23,7 +23,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.joevo2.spending"
+    },
+    "android": {
+      "package": "com.joevo2.spending"
     }
   }
 }

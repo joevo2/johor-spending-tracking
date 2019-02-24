@@ -13,12 +13,27 @@ import {
 } from "react-native";
 import { ImagePicker, Permissions } from "expo";
 
+import Firebase from "../api/config";
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     title: "Add Spending"
   };
 
-  state = { date: new Date(), image: null };
+  state = { desc: "", amount: 0, date: new Date(), image: null };
+
+  handleAddItem = myData => {
+    // Firebase dont take in date object?
+    myData.date = myData.date.toLocaleDateString();
+    Firebase.database()
+      .ref("users/joel")
+      .push({
+        desc: this.state.desc,
+        amount: Number(this.state.amount),
+        date: this.state.date
+      });
+
+    // this.props.navigation.navigate("Home", { test: "some data from link screen" });
+  };
 
   render() {
     const { image } = this.state;
@@ -113,10 +128,8 @@ export default class LinksScreen extends React.Component {
 
         {/* Bottom Bar */}
         <TouchableOpacity
-          onPress={() => alert("button pressed")}
-          title="Learn More"
           onPress={() => {
-            alert(JSON.stringify(this.state));
+            this.handleAddItem(this.state);
           }}
           style={{
             backgroundColor: "lightgrey",

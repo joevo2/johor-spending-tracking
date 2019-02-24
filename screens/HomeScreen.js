@@ -1,6 +1,8 @@
 import React from "react";
 import { View, StyleSheet, ScrollView, Text, FlatList } from "react-native";
 
+import Firebase from "../api/config";
+
 const Card = ({ amount = 0, item = "no-name", children }) => (
   <View
     style={{
@@ -24,38 +26,45 @@ export default class HomeScreen extends React.Component {
     title: "Spending"
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {};
+    const items = Firebase.database().ref("users/joel");
+    items.on("value", snapshot => {
+      const data = snapshot.val();
+      if (data) {
+        // Convert firebase objects into an array
+        const convertedItems = Object.values(data);
+        // [
+        //   {desc: 'dasd'},
+        //   {desc: 'asdad'}
+        // ]
+        this.setState({ items: convertedItems });
+      }
+    });
+  }
+
+  // shouldComponentUpdate(newProps, newState) {
+  //   const valueFromOtherScreen = newProps.navigation.getParam("test", false);
+    
+  //   if (valueFromOtherScreen) {
+  //     alert(valueFromOtherScreen);
+
+  //     // const tempItems = this.state.items
+  //     // tempItems.push({valueFromOtherScreen})
+
+  //     // this.setState({items: tempItems})
+  //   }
+
+  //   return true
+  // }
+
   render() {
     const date = new Date();
-
-    const testData = [
-      {
-        key: "0",
-        amount: 1,
-        desc: "Food",
-        date: new Date()
-      },
-      {
-        key: "1",
-        amount: 2,
-        desc: "Food",
-        date: new Date()
-      },
-      {
-        key: "3",
-        amount: 5,
-        desc: "Something",
-        date: new Date()
-      }
-    ];
-    // const total = testData.map(item => item.amount) // [1, 2, 5]
-    // const totalAmount = total.reduce((acc, val) => {
-    //   return acc + val;
-    // });
-
+    const testData = this.state.items || [];
     const totalAmount = testData
-      .map(item => item.amount)
-      .reduce((acc, value) => acc + value);
-
+      .map(item => Number(item.amount))
+      .reduce((acc, value) => acc + value, 0);
     // let totalAmount = 0;
     // for (let i = 0; i < testData.length; i++) {
     //   totalAmount = totalAmount + testData[i].amount;
@@ -91,7 +100,6 @@ export default class HomeScreen extends React.Component {
                 <Card amount={item.amount} item={item.desc} />
               )}
             />
-            
           </View>
         </ScrollView>
 
