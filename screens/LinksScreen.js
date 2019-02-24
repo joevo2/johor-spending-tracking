@@ -7,17 +7,21 @@ import {
   DatePickerIOS,
   DatePickerAndroid,
   TouchableOpacity,
-  Platform
+  Platform,
+  Button,
+  Image
 } from "react-native";
+import { ImagePicker, Permissions } from "expo";
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     title: "Add Spending"
   };
 
-  state = { date: new Date() };
+  state = { date: new Date(), image: null };
 
   render() {
+    const { image } = this.state;
     return (
       <View style={styles.container}>
         <View>
@@ -71,6 +75,38 @@ export default class LinksScreen extends React.Component {
               </TouchableOpacity>
             )}
           </View>
+
+          <Button
+            title="Pick an image from camera roll"
+            onPress={async () => {
+              // Ask for permission
+              const { status } = await Permissions.askAsync(
+                Permissions.CAMERA_ROLL
+              );
+              if (status === "granted") {
+                // Do camera stuff
+                let result = await ImagePicker.launchImageLibraryAsync({
+                  allowsEditing: true,
+                  aspect: [4, 3]
+                });
+
+                console.log(result);
+
+                if (!result.cancelled) {
+                  this.setState({ image: result.uri });
+                }
+              } else {
+                // Permission denied
+                throw new Error("Camera permission not granted");
+              }
+            }}
+          />
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 200, height: 200 }}
+            />
+          )}
         </View>
 
         <Text>{JSON.stringify(this.state)}</Text>
