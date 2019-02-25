@@ -1,22 +1,31 @@
 import React from "react";
-import { View, StyleSheet, ScrollView, Text, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  FlatList,
+  Image
+} from "react-native";
 
 import Firebase from "../api/config";
 
-const Card = ({ amount = 0, item = "no-name", children }) => (
+const Card = ({ amount = 0, item = "no-name", children, image }) => (
   <View
     style={{
       borderWidth: 0.5,
       borderColor: "#d6d7da",
       flexDirection: "row",
       justifyContent: "space-between",
+      alignItems: "center",
       padding: 10
     }}
   >
     <Text>{item}</Text>
     <Text>RM {amount}</Text>
 
-    {children ? <Text>RM {children}</Text> : null}
+    {children ? <Text>RM test {children}</Text> : null}
+    <Image style={{ width: 40, height: 40 }} source={{ uri: image }} />
 
     {/* {children && <Text>RM {children}</Text>} */}
   </View>
@@ -46,7 +55,7 @@ export default class HomeScreen extends React.Component {
 
   // shouldComponentUpdate(newProps, newState) {
   //   const valueFromOtherScreen = newProps.navigation.getParam("test", false);
-    
+
   //   if (valueFromOtherScreen) {
   //     alert(valueFromOtherScreen);
 
@@ -97,7 +106,7 @@ export default class HomeScreen extends React.Component {
             <FlatList
               data={testData}
               renderItem={({ item }) => (
-                <Card amount={item.amount} item={item.desc} />
+                <Card amount={item.amount} item={item.desc} image={item.imageURL} />
               )}
             />
           </View>
